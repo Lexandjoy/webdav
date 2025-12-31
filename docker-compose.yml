@@ -1,0 +1,23 @@
+services:
+  webdav-custom:
+    # Em vez de 'image:', usamos 'build:' para criar nossa versão
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webdav-custom
+    restart: unless-stopped
+    volumes:
+      # Volume persistente
+      - webdav_data:/data
+    # Avisa ao Coolify explicitamente sobre a porta
+    expose:
+      - "8080"
+    # Healthcheck simples para garantir que o Coolify saiba se caiu
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  webdav_data:
